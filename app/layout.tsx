@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PawFinder — Find the best UK pet, equine and rural pros",
+  title: "PetSit — Find the best UK pet, equine and rural pros",
   description:
     "Search local, top-rated pet sitters, dog walkers, farriers, livery yards, farm hands, agricultural contractors and more across the UK. Real Google reviews, real ratings.",
 };
@@ -34,7 +34,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <footer className="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
           <p>
-            🐾 PawFinder — UK directory for pet, equine and rural pros. Powered by Google.
+            🐾 PetSit — UK directory for pet, equine and rural pros. Powered by Google.
           </p>
         </footer>
       </body>

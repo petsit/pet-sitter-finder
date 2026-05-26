@@ -7,7 +7,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2 text-xl font-semibold tracking-tight">
           <span aria-hidden>🐾</span>
           <span>
-            Paw<span className="text-teal-600">Finder</span>
+            Pet<span className="text-teal-600">Sit</span>
           </span>
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-slate-600">
