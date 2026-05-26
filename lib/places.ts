@@ -84,6 +84,10 @@ export async function searchPlaces(params: SearchParams): Promise<Provider[]> {
 
   const body = {
     textQuery: params.service,
+    // We use locationBias here (not locationRestriction) because the Text
+    // Search API rejects a circular locationRestriction — only rectangles
+    // are accepted for that field. The strict radius enforcement is done
+    // in the haversine filter below, which gives us a proper circle.
     locationBias: {
       circle: {
         center: { latitude: params.lat, longitude: params.lng },
@@ -123,6 +127,15 @@ export async function searchPlaces(params: SearchParams): Promise<Provider[]> {
 
   let providers = active.map(mapPlace);
 
+  // Strict radius enforcement. locationBias only *suggests* a region to
+  // Google, so without this filter we'd get results well outside the
+  // user's chosen radius (e.g. "Within 2 mi" returning 3.6 mi results).
+  const origin: LatLng = { lat: params.lat, lng: params.lng };
+  const radiusMiles = params.radiusMeters / 1609.344;
+  providers = providers.filter(
+    (p) => haversineMiles(origin, p.location) <= radiusMiles
+  );
+
   // Optional rating filter
   if (params.minRating !== undefined) {
     providers = providers.filter(
@@ -132,7 +145,6 @@ export async function searchPlaces(params: SearchParams): Promise<Provider[]> {
 
   // Sort
   const sortBy = params.sortBy ?? "rating";
-  const origin: LatLng = { lat: params.lat, lng: params.lng };
   providers.sort((a, b) => {
     if (sortBy === "rating") {
       const ra = a.rating ?? 0;
