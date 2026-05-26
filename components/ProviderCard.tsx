@@ -3,7 +3,7 @@ import { Provider, LatLng } from "@/lib/types";
 import { haversineMiles } from "@/lib/places";
 import RatingStars from "./RatingStars";
 import { placePhotoUrl } from "@/lib/places";
-import { Phone, Globe, MapPin } from "lucide-react";
+import { Phone, Globe, MapPin, PawPrint } from "lucide-react";
 
 interface Props {
   provider: Provider;
@@ -19,7 +19,7 @@ export default function ProviderCard({ provider, origin, rank }: Props) {
       className="flex gap-4 p-4 rounded-2xl border border-slate-200 bg-white hover:shadow-md hover:border-teal-300 transition group"
       data-place-id={provider.id}
     >
-      <div className="relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-gradient-to-br from-teal-100 to-amber-100 flex items-center justify-center">
+      <div className="relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-slate-100 flex items-center justify-center">
         {provider.photoRef ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -29,9 +29,7 @@ export default function ProviderCard({ provider, origin, rank }: Props) {
             loading="lazy"
           />
         ) : (
-          <span className="text-4xl" aria-hidden>
-            🐾
-          </span>
+          <PawPrint className="w-10 h-10 text-slate-300" aria-hidden />
         )}
         {rank !== undefined && rank <= 3 && (
           <span className="absolute top-1.5 left-1.5 bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full">

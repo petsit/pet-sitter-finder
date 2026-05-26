@@ -19,7 +19,6 @@ export default function LocationPrompt({ service }: Props) {
   function go(extra: Record<string, string>) {
     const params = new URLSearchParams(searchParams.toString());
     Object.entries(extra).forEach(([k, v]) => params.set(k, v));
-    // Remove any stale location params before adding the new one
     if ("location" in extra) {
       params.delete("lat");
       params.delete("lng");
@@ -69,15 +68,18 @@ export default function LocationPrompt({ service }: Props) {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
       <div className="text-center mb-10">
-        <div className="text-5xl mb-4" aria-hidden>
-          {service.emoji}
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-teal-50 text-2xl mb-5">
+          <span aria-hidden>{service.emoji}</span>
         </div>
+        <p className="text-sm font-semibold uppercase tracking-wider text-teal-700 mb-2">
+          {service.label}
+        </p>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 mb-3">
           Find {service.label.toLowerCase()} near you
         </h1>
-        <p className="text-lg text-slate-600">
-          Enter your postcode or use your current location to see top-rated{" "}
-          {service.label.toLowerCase()} in your area.
+        <p className="text-lg text-slate-600 leading-relaxed">
+          Enter your postcode or use your current location to see top-rated
+          providers in your area.
         </p>
       </div>
 
@@ -85,7 +87,7 @@ export default function LocationPrompt({ service }: Props) {
         onSubmit={handleSubmit}
         className="mx-auto max-w-2xl bg-white shadow-lg ring-1 ring-slate-200 rounded-2xl p-3 sm:p-2 flex flex-col sm:flex-row gap-2 sm:gap-1"
       >
-        <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-white rounded-xl">
+        <label className="flex-1 flex items-center gap-2 px-3 py-2 bg-white rounded-xl">
           <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
           <input
             type="text"
@@ -96,7 +98,7 @@ export default function LocationPrompt({ service }: Props) {
             autoComplete="postal-code"
             autoFocus
           />
-        </div>
+        </label>
         <button
           type="submit"
           className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-3 rounded-xl transition"
@@ -129,7 +131,7 @@ export default function LocationPrompt({ service }: Props) {
       <div className="mt-12 text-center text-sm text-slate-500">
         <p>
           Looking for something else?{" "}
-          <a href="/" className="text-teal-700 hover:underline">
+          <a href="/" className="text-teal-700 hover:underline font-medium">
             Browse all services
           </a>
         </p>

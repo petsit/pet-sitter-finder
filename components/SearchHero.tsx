@@ -7,7 +7,7 @@ import {
   SERVICE_GROUPS,
   getServicesByGroup,
 } from "@/lib/services";
-import { MapPin, Loader2, Search } from "lucide-react";
+import { MapPin, Loader2, Search, ChevronDown } from "lucide-react";
 
 export default function SearchHero() {
   const router = useRouter();
@@ -20,7 +20,6 @@ export default function SearchHero() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Sync if the URL changes (e.g. user clicks a ServiceGrid tile)
   useEffect(() => {
     const fromUrl = searchParams.get("service");
     if (fromUrl && fromUrl !== service) {
@@ -33,7 +32,7 @@ export default function SearchHero() {
     router.push(`/search?${qs.toString()}`);
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     if (!location.trim()) {
@@ -48,7 +47,7 @@ export default function SearchHero() {
     go(qs);
   }
 
-  async function useMyLocation() {
+  function useMyLocation() {
     setError(null);
     if (!("geolocation" in navigator)) {
       setError("Your browser doesn't support geolocation.");
@@ -79,26 +78,26 @@ export default function SearchHero() {
   }
 
   return (
-    <section className="bg-gradient-to-b from-teal-50 via-white to-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/60 via-white to-white">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+        <p className="text-sm font-semibold uppercase tracking-wider text-teal-700 mb-3">
+          UK pet, equine &amp; rural directory
+        </p>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900">
-          Find the best{" "}
-          <span className="text-teal-600">
-            pet, equine &amp; rural pros
-          </span>
-          <br className="hidden sm:block" /> in your area
+          Find trusted local pros,
+          <br className="hidden sm:block" /> rated by real reviews
         </h1>
-        <p className="mt-5 text-lg text-slate-600 max-w-2xl mx-auto">
-          Search local UK pet sitters, dog walkers, farriers, livery yards,
-          farm hands and more — sorted by real Google reviews. Compare ratings
-          and contact your favourite directly.
+        <p className="mt-5 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          Search local pet sitters, dog walkers, farriers, livery yards,
+          farm hands and more — sorted by genuine Google reviews. Compare
+          ratings and contact your favourite directly.
         </p>
 
         <form
           onSubmit={handleSubmit}
           className="mt-10 mx-auto max-w-3xl bg-white shadow-lg ring-1 ring-slate-200 rounded-2xl p-3 sm:p-2 flex flex-col sm:flex-row gap-2 sm:gap-1"
         >
-          <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-white rounded-xl">
+          <label className="flex-1 flex items-center gap-2 px-3 py-2 bg-white rounded-xl">
             <MapPin className="w-5 h-5 text-slate-400 shrink-0" />
             <input
               type="text"
@@ -108,18 +107,17 @@ export default function SearchHero() {
               className="w-full bg-transparent placeholder:text-slate-400 text-slate-900 outline-none"
               autoComplete="postal-code"
             />
-          </div>
+          </label>
 
-          <div className="flex items-center gap-2 px-3 py-2 sm:border-l sm:border-slate-200 bg-white rounded-xl">
-            <span aria-hidden className="text-lg">🐾</span>
+          <label className="relative flex items-center gap-2 px-3 py-2 sm:border-l sm:border-slate-200 bg-white rounded-xl">
             <select
               value={service}
               onChange={(e) => setService(e.target.value)}
-              className="bg-transparent text-slate-900 outline-none font-medium max-w-[12rem]"
+              className="appearance-none bg-transparent text-slate-900 outline-none font-medium pr-6 cursor-pointer"
               aria-label="Service"
             >
               {SERVICE_GROUPS.map((g) => (
-                <optgroup key={g.key} label={`${g.emoji} ${g.label}`}>
+                <optgroup key={g.key} label={g.label}>
                   {getServicesByGroup(g.key).map((s) => (
                     <option key={s.slug} value={s.slug}>
                       {s.label}
@@ -128,7 +126,8 @@ export default function SearchHero() {
                 </optgroup>
               ))}
             </select>
-          </div>
+            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 pointer-events-none" />
+          </label>
 
           <button
             type="submit"

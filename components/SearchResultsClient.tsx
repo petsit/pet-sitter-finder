@@ -11,7 +11,7 @@ import {
 import ProviderCard from "./ProviderCard";
 import ResultsMap from "./ResultsMap";
 import { haversineMiles } from "@/lib/places";
-import { X, SlidersHorizontal } from "lucide-react";
+import { X, SlidersHorizontal, Circle, Camera, Globe } from "lucide-react";
 
 interface Props {
   origin: LatLng;
@@ -198,19 +198,20 @@ export default function SearchResultsClient({
           </span>
           <TogglePill
             label="Open now"
-            emoji="🟢"
+            Icon={Circle}
+            iconClass="fill-emerald-500 text-emerald-500"
             active={toggles.openNow}
             onClick={() => toggle("openNow")}
           />
           <TogglePill
             label="Has photos"
-            emoji="📷"
+            Icon={Camera}
             active={toggles.hasPhotos}
             onClick={() => toggle("hasPhotos")}
           />
           <TogglePill
             label="Has website"
-            emoji="🌐"
+            Icon={Globe}
             active={toggles.hasWebsite}
             onClick={() => toggle("hasWebsite")}
           />
@@ -272,12 +273,14 @@ export default function SearchResultsClient({
 
 function TogglePill({
   label,
-  emoji,
+  Icon,
+  iconClass,
   active,
   onClick,
 }: {
   label: string;
-  emoji: string;
+  Icon: React.ComponentType<{ className?: string }>;
+  iconClass?: string;
   active: boolean;
   onClick: () => void;
 }) {
@@ -291,7 +294,11 @@ function TogglePill({
           : "bg-white border-slate-200 text-slate-700 hover:border-slate-300"
       }`}
     >
-      <span aria-hidden>{emoji}</span>
+      <Icon
+        className={`w-3.5 h-3.5 ${
+          active ? "text-white" : iconClass ?? "text-slate-500"
+        }`}
+      />
       <span className="font-medium">{label}</span>
     </button>
   );

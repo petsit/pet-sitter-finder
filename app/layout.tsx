@@ -32,10 +32,13 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-white text-slate-900">
         <Header />
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-slate-200 py-8 text-center text-sm text-slate-500">
-          <p>
-            🐾 PetSit — UK directory for pet, equine and rural pros. Powered by Google.
-          </p>
+        <footer className="border-t border-slate-200 mt-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
+            <p className="font-medium text-slate-700">
+              Pet<span className="text-teal-600">Sit</span>
+            </p>
+            <p>UK directory for pet, equine and rural pros · Listings powered by Google</p>
+          </div>
         </footer>
       </body>
     </html>
