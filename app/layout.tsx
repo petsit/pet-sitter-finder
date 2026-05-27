@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -17,6 +17,21 @@ export const metadata: Metadata = {
   title: "PetSit — Find the best UK pet, equine and rural pros",
   description:
     "Search local, top-rated pet sitters, dog walkers, farriers, livery yards, farm hands, agricultural contractors and more across the UK. Real Google reviews, real ratings.",
+  applicationName: "PetSit",
+  appleWebApp: {
+    title: "PetSit",
+    capable: true,
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0d9488",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
