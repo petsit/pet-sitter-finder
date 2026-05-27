@@ -313,4 +313,76 @@ export async function fetchPlacePhoto(
   return { body, contentType };
 }
 
+// --- Find by name (for providers searching their own listing, or
+// customers looking for a specific business they've been recommended) ---
+
+export interface FindByNameParams {
+  name: string;
+  bias?: {
+    lat: number;
+    lng: number;
+    radiusMeters: number;
+  };
+}
+
+export async function findPlacesByName(
+  params: FindByNameParams
+): Promise<Provider[]> {
+  const fieldMask = [
+    "places.id",
+    "places.displayName",
+    "places.formattedAddress",
+    "places.location",
+    "places.rating",
+    "places.userRatingCount",
+    "places.primaryType",
+    "places.types",
+    "places.photos",
+    "places.businessStatus",
+    "places.websiteUri",
+    "places.nationalPhoneNumber",
+  ].join(",");
+
+  const body: Record<string, unknown> = {
+    textQuery: params.name,
+    maxResultCount: 10,
+    regionCode: "GB",
+  };
+  // Soft bias toward an area if a postcode was supplied — helps
+  // disambiguate when several businesses share a name across the UK.
+  if (params.bias) {
+    body.locationBias = {
+      circle: {
+        center: { latitude: params.bias.lat, longitude: params.bias.lng },
+        radius: params.bias.radiusMeters,
+      },
+    };
+  }
+
+  const res = await fetch(`${PLACES_BASE}/places:searchText`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": getKey(),
+      "X-Goog-FieldMask": fieldMask,
+    },
+    body: JSON.stringify(body),
+    next: { revalidate: 300 },
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Places searchText failed: ${res.status} ${errText}`);
+  }
+
+  const data = await res.json();
+  const places: any[] = data.places ?? [];
+  const active = places.filter(
+    (p) => !p.businessStatus || p.businessStatus === "OPERATIONAL"
+  );
+
+  // Same blocklist filter as the main search — no pubs, hotels, etc.
+  return active.map(mapPlace).filter((p) => isLegitimateProvider(p));
+}
+
 export { metersToMiles };

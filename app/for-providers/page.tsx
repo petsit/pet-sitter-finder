@@ -57,15 +57,15 @@ export default function ForProvidersPage() {
               Sign in to your dashboard
             </Link>
             <Link
-              href="/"
+              href="/find"
               className="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 hover:border-teal-400 text-slate-900 font-medium px-6 py-3 rounded-xl"
             >
               <Search className="w-4 h-4" /> Find your business
             </Link>
           </div>
           <p className="mt-3 text-sm text-slate-500">
-            New here? Find your business in search and tap{" "}
-            <em>&ldquo;Are you the owner?&rdquo;</em> on the listing.
+            New here? Search for your business by name, then tap{" "}
+            <em>&ldquo;Is this you? Claim it&rdquo;</em>.
           </p>
         </div>
       </section>

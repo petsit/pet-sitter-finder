@@ -137,7 +137,7 @@ export default function SearchHero() {
           </button>
         </form>
 
-        <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 text-sm">
           <button
             onClick={useMyLocation}
             disabled={busy}
@@ -150,6 +150,13 @@ export default function SearchHero() {
             )}
             Use my current location
           </button>
+          <span className="hidden sm:inline text-slate-300">·</span>
+          <a
+            href="/find"
+            className="inline-flex items-center gap-1.5 text-teal-700 hover:text-teal-800"
+          >
+            <Search className="w-4 h-4" /> Search by business name
+          </a>
         </div>
 
         {error && (
