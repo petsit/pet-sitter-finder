@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; max-width: 560px; margin: 0 auto;">
       <h2 style="color: #0d9488; margin-bottom: 4px;">New listing claim</h2>
-      <p style="color: #475569; margin-top: 0;">Someone wants to claim a listing on PetSit.</p>
+      <p style="color: #475569; margin-top: 0;">Someone wants to claim a listing on HERD.</p>
 
       <h3 style="margin-top: 24px; margin-bottom: 4px; color: #0f172a;">Business</h3>
       <p style="margin: 0 0 4px;"><strong>${esc(data.businessName)}</strong></p>
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
 
   await sendNotificationEmail({
     to: adminTo,
-    subject: `[PetSit claim] ${data.businessName} — ${data.claimantName}`,
+    subject: `[HERD claim] ${data.businessName} — ${data.claimantName}`,
     html,
     replyTo: claimantEmail,
   });

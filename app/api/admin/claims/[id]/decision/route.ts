@@ -89,7 +89,7 @@ export async function POST(
   if (body.status === "approved") {
     await sendNotificationEmail({
       to: updated.claimantEmail,
-      subject: `Your PetSit claim for ${updated.businessName} has been approved`,
+      subject: `Your HERD claim for ${updated.businessName} has been approved`,
       html: `
         <div style="font-family: -apple-system, sans-serif; max-width: 520px; margin: 0 auto;">
           <h2 style="color: #0d9488;">Welcome aboard 🎉</h2>
@@ -97,7 +97,7 @@ export async function POST(
             <strong>${escape(updated.businessName)}</strong> has been approved.</p>
           <p>You can now sign in to manage your listing — add services, pricing, a custom description and more.</p>
           <p style="margin: 24px 0;">
-            <a href="${loginUrl}" style="display: inline-block; background: #0d9488; color: white; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: 500;">Sign in to PetSit</a>
+            <a href="${loginUrl}" style="display: inline-block; background: #0d9488; color: white; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: 500;">Sign in to HERD</a>
           </p>
           <p style="color: #475569; font-size: 14px;">Or visit your listing as customers see it:<br><a href="${listingUrl}">${listingUrl}</a></p>
         </div>
@@ -106,7 +106,7 @@ export async function POST(
   } else {
     await sendNotificationEmail({
       to: updated.claimantEmail,
-      subject: `Your PetSit claim for ${updated.businessName} wasn't approved`,
+      subject: `Your HERD claim for ${updated.businessName} wasn't approved`,
       html: `
         <div style="font-family: -apple-system, sans-serif; max-width: 520px; margin: 0 auto;">
           <h2 style="color: #0f172a;">Claim update</h2>

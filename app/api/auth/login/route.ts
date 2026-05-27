@@ -65,13 +65,13 @@ export async function POST(req: NextRequest) {
 
   await sendNotificationEmail({
     to: email,
-    subject: "Sign in to PetSit",
+    subject: "Sign in to HERD",
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; max-width: 500px; margin: 0 auto;">
-        <h2 style="color: #0d9488;">Your PetSit sign-in link</h2>
+        <h2 style="color: #0d9488;">Your HERD sign-in link</h2>
         <p style="color: #475569;">Tap the button below to sign in to your provider dashboard. This link expires in 15 minutes.</p>
         <p style="margin: 24px 0;">
-          <a href="${link}" style="display: inline-block; background: #0d9488; color: white; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: 500;">Sign in to PetSit</a>
+          <a href="${link}" style="display: inline-block; background: #0d9488; color: white; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: 500;">Sign in to HERD</a>
         </p>
         <p style="color: #94a3b8; font-size: 12px;">If you didn't request this, you can safely ignore it.</p>
         <p style="color: #94a3b8; font-size: 12px;">Or paste this URL into your browser:<br>${link}</p>

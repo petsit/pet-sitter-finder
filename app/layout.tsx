@@ -14,12 +14,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PetSit — Find the best UK pet, equine and rural pros",
+  title: "HERD — Find the best UK pet, equine and rural pros",
   description:
-    "Search local, top-rated pet sitters, dog walkers, farriers, livery yards, farm hands, agricultural contractors and more across the UK. Real Google reviews, real ratings.",
-  applicationName: "PetSit",
+    "Helpers, Equine & Rural Directory. Search local, top-rated pet sitters, dog walkers, farriers, livery yards, farm hands, agricultural contractors and more across the UK. Real Google reviews, real ratings.",
+  applicationName: "HERD",
   appleWebApp: {
-    title: "PetSit",
+    title: "HERD",
     capable: true,
     statusBarStyle: "default",
   },
@@ -49,10 +49,8 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <footer className="border-t border-slate-200 mt-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
-            <p className="font-medium text-slate-700">
-              Pet<span className="text-teal-600">Sit</span>
-            </p>
-            <p>UK directory for pet, equine and rural pros · Listings powered by Google</p>
+            <p className="font-medium text-slate-700 tracking-wide">HERD</p>
+            <p>Helpers, Equine &amp; Rural Directory · Listings powered by Google</p>
           </div>
         </footer>
       </body>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PawPrint, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { getSessionEmail } from "@/lib/auth";
 
 export default async function Header() {
@@ -13,12 +13,10 @@ export default async function Header() {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900"
         >
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-teal-600 text-white">
-            <PawPrint className="w-4 h-4" />
+          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-teal-600 text-white font-bold text-base">
+            H
           </span>
-          <span>
-            Pet<span className="text-teal-600">Sit</span>
-          </span>
+          <span className="tracking-wide">HERD</span>
         </Link>
 
         <nav className="flex items-center gap-4 sm:gap-6 text-sm font-medium text-slate-600">

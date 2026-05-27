@@ -2,9 +2,9 @@ import Link from "next/link";
 import { BadgeCheck, Search, Star, Wrench, PoundSterling } from "lucide-react";
 
 export const metadata = {
-  title: "For service providers — PetSit",
+  title: "For service providers — HERD",
   description:
-    "Manage your PetSit listing. Add services, prices, photos and a description that customers can see alongside your Google reviews.",
+    "Manage your HERD listing. Add services, prices, photos and a description that customers can see alongside your Google reviews.",
 };
 
 const PERKS = [
@@ -43,7 +43,7 @@ export default function ForProvidersPage() {
             Your business, on your terms
           </h1>
           <p className="mt-5 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            PetSit lists every UK pet, equine and rural service from Google.
+            HERD lists every UK pet, equine and rural service from Google.
             Claim your listing to add the things Google can&apos;t — your
             services, your prices, your story — and become the obvious
             choice when customers search nearby.
@@ -110,7 +110,7 @@ export default function ForProvidersPage() {
                 Find your business
               </h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Search for it on PetSit just like a customer would, then tap{" "}
+                Search for it on HERD just like a customer would, then tap{" "}
                 <em>Are you the owner?</em>
               </p>
             </li>

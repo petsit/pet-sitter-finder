@@ -20,7 +20,7 @@ export async function sendNotificationEmail(args: SendArgs): Promise<{
 }> {
   const apiKey = process.env.RESEND_API_KEY;
   const fromAddr =
-    process.env.NOTIFICATION_FROM_EMAIL ?? "PetSit <onboarding@resend.dev>";
+    process.env.NOTIFICATION_FROM_EMAIL ?? "HERD <onboarding@resend.dev>";
 
   if (!apiKey) {
     // Fallback path: log the message, return success.
