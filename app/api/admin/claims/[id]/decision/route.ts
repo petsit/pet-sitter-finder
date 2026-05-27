@@ -20,7 +20,20 @@ export async function POST(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> }
 ) {
+  // --- diagnostic logging ---
+  const cookieNames = req.cookies.getAll().map((c) => c.name);
+  const adminCookie = req.cookies.get("petsit_admin");
+  const hasSecret = Boolean(process.env.AUTH_SECRET);
+  console.log("[admin/decision] incoming", {
+    cookies: cookieNames,
+    hasAdminCookie: Boolean(adminCookie?.value),
+    adminCookieLength: adminCookie?.value?.length ?? 0,
+    hasAuthSecret: hasSecret,
+    authSecretLength: process.env.AUTH_SECRET?.length ?? 0,
+  });
+
   if (!(await isAdminRequest(req))) {
+    console.warn("[admin/decision] auth rejected — see warn above for verify failure");
     return NextResponse.json({ error: "Not authorised" }, { status: 401 });
   }
 
