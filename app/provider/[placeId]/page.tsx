@@ -189,6 +189,22 @@ export default async function ProviderPage({ params }: PageProps) {
           )}
 
           <ProviderMap location={details.location} name={details.name} />
+
+          <Link
+            href={`/provider/${placeId}/claim`}
+            className="block rounded-2xl border border-slate-200 bg-slate-50 p-5 hover:border-teal-400 hover:bg-white transition group"
+          >
+            <p className="text-sm font-semibold text-slate-900 mb-1 group-hover:text-teal-700">
+              Are you the owner?
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Claim this listing to add your services, pricing and photos.
+              Verified profiles stand out in search results.
+            </p>
+            <p className="text-sm font-medium text-teal-700 mt-2 group-hover:underline">
+              Claim this listing →
+            </p>
+          </Link>
         </aside>
       </div>
     </div>
