@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionEmail } from "@/lib/auth";
+import { getSessionEmailFromReq } from "@/lib/auth";
 import { db } from "@/db";
 import { claims, providerOverrides } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
@@ -16,7 +16,7 @@ export async function PUT(
   req: NextRequest,
   ctx: { params: Promise<{ placeId: string }> }
 ) {
-  const email = await getSessionEmail();
+  const email = await getSessionEmailFromReq(req);
   if (!email) {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   }

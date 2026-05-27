@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAdmin } from "@/lib/auth";
+import { isAdminRequest } from "@/lib/auth";
 import { db } from "@/db";
 import { claims, providerOverrides } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -20,7 +20,7 @@ export async function POST(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> }
 ) {
-  if (!(await isAdmin())) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "Not authorised" }, { status: 401 });
   }
 

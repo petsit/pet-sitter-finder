@@ -8,6 +8,7 @@
 
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import type { NextRequest } from "next/server";
 
 const SESSION_COOKIE = "petsit_session";
 const SESSION_DAYS = 30;
@@ -93,6 +94,18 @@ export async function getSessionEmail(): Promise<string | null> {
   return await verifySessionToken(c.value);
 }
 
+// Request-based variant for use in API route handlers. Reads cookies
+// directly off the NextRequest rather than relying on the async-local-
+// storage cookies() helper, which has been flaky for us in nested
+// dynamic API routes.
+export async function getSessionEmailFromReq(
+  req: NextRequest
+): Promise<string | null> {
+  const value = req.cookies.get(SESSION_COOKIE)?.value;
+  if (!value) return null;
+  return await verifySessionToken(value);
+}
+
 // --- Admin auth (single shared password) ---
 
 const ADMIN_COOKIE = "petsit_admin";
@@ -114,16 +127,29 @@ export async function startAdminSession(): Promise<void> {
   });
 }
 
-export async function isAdmin(): Promise<boolean> {
-  const jar = await cookies();
-  const c = jar.get(ADMIN_COOKIE);
-  if (!c?.value) return false;
+async function verifyAdminToken(value: string | undefined): Promise<boolean> {
+  if (!value) return false;
   try {
-    await jwtVerify(c.value, secret(), { subject: "admin" });
+    await jwtVerify(value, secret(), { subject: "admin" });
     return true;
-  } catch {
+  } catch (err) {
+    console.warn(
+      "[auth] admin token verify failed:",
+      (err as Error)?.message ?? err
+    );
     return false;
   }
+}
+
+export async function isAdmin(): Promise<boolean> {
+  const jar = await cookies();
+  return verifyAdminToken(jar.get(ADMIN_COOKIE)?.value);
+}
+
+// Request-based variant for API route handlers (see comment on
+// getSessionEmailFromReq above).
+export async function isAdminRequest(req: NextRequest): Promise<boolean> {
+  return verifyAdminToken(req.cookies.get(ADMIN_COOKIE)?.value);
 }
 
 export async function endAdminSession(): Promise<void> {
