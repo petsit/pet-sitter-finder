@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
 import { db } from "@/db";
 import { claims } from "@/db/schema";
@@ -47,12 +46,17 @@ export default async function AdminPage() {
           </p>
           <h1 className="text-3xl font-bold text-slate-900">Listing claims</h1>
         </div>
-        <Link
-          href="/api/admin/logout"
-          className="text-sm text-slate-500 hover:text-slate-900"
-        >
-          Sign out
-        </Link>
+        {/* Form POST (not a Link) so Next.js doesn't prefetch this
+            endpoint on page render and accidentally sign the admin out.
+            That bug ate hours of debug time — see commit 126e927-ish. */}
+        <form action="/api/admin/logout" method="post">
+          <button
+            type="submit"
+            className="text-sm text-slate-500 hover:text-slate-900"
+          >
+            Sign out
+          </button>
+        </form>
       </header>
 
       <section className="mb-12">
