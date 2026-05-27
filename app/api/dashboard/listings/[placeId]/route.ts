@@ -10,6 +10,25 @@ interface Payload {
   description?: string;
   servicesOffered?: string;
   pricingNotes?: string;
+  customPhotos?: string[];
+}
+
+const MAX_CUSTOM_PHOTOS = 10;
+const MAX_URL_LENGTH = 2000;
+
+function cleanPhotoList(input: unknown): string[] | null {
+  if (!Array.isArray(input)) return null;
+  const cleaned: string[] = [];
+  for (const item of input) {
+    if (typeof item !== "string") continue;
+    const trimmed = item.trim();
+    if (!trimmed) continue;
+    if (trimmed.length > MAX_URL_LENGTH) continue;
+    if (!/^https?:\/\//i.test(trimmed)) continue;
+    if (!cleaned.includes(trimmed)) cleaned.push(trimmed);
+    if (cleaned.length >= MAX_CUSTOM_PHOTOS) break;
+  }
+  return cleaned;
 }
 
 export async function PUT(
@@ -22,7 +41,6 @@ export async function PUT(
   }
   const { placeId } = await ctx.params;
 
-  // Confirm the signed-in user has an approved claim for this place
   const ownCheck = await db
     .select({ id: claims.id })
     .from(claims)
@@ -45,8 +63,8 @@ export async function PUT(
   const description = body.description?.slice(0, 1500) ?? null;
   const servicesOffered = body.servicesOffered?.slice(0, 800) ?? null;
   const pricingNotes = body.pricingNotes?.slice(0, 500) ?? null;
+  const customPhotos = cleanPhotoList(body.customPhotos);
 
-  // Upsert
   await db
     .insert(providerOverrides)
     .values({
@@ -55,6 +73,7 @@ export async function PUT(
       description,
       servicesOffered,
       pricingNotes,
+      customPhotos,
       updatedAt: new Date(),
     })
     .onConflictDoUpdate({
@@ -63,6 +82,7 @@ export async function PUT(
         description,
         servicesOffered,
         pricingNotes,
+        customPhotos,
         updatedAt: new Date(),
       },
     });

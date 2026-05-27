@@ -49,7 +49,23 @@ export default async function ProviderPage({ params }: PageProps) {
     !!override?.pricingNotes;
 
   const reviews = details.reviews ?? [];
-  const photos = details.photoRefs ?? [];
+
+  // Build a unified photo list: owner-supplied URLs first (so the
+  // provider's own photos lead the gallery), then Google photos.
+  const ownerPhotoUrls = override?.customPhotos ?? [];
+  const googlePhotoUrls = (details.photoRefs ?? []).map((ref) =>
+    placePhotoUrl(ref, 1200)
+  );
+  const googlePhotoUrlsSmall = (details.photoRefs ?? []).map((ref) =>
+    placePhotoUrl(ref, 400)
+  );
+  const photos: { src: string; smallSrc: string }[] = [
+    ...ownerPhotoUrls.map((u) => ({ src: u, smallSrc: u })),
+    ...googlePhotoUrls.map((u, i) => ({
+      src: u,
+      smallSrc: googlePhotoUrlsSmall[i] ?? u,
+    })),
+  ];
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
@@ -58,16 +74,16 @@ export default async function ProviderPage({ params }: PageProps) {
         <div className="grid grid-cols-4 gap-2 mb-8 rounded-2xl overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={placePhotoUrl(photos[0], 1200)}
+            src={photos[0].src}
             alt={details.name}
             className="col-span-4 sm:col-span-2 row-span-2 w-full h-72 sm:h-96 object-cover"
             loading="eager"
           />
           {photos.slice(1, 5).map((p) => (
             <img
-              key={p}
+              key={p.src}
               // eslint-disable-next-line @next/next/no-img-element
-              src={placePhotoUrl(p, 400)}
+              src={p.smallSrc}
               alt=""
               className="hidden sm:block w-full h-[11.5rem] object-cover"
               loading="lazy"
