@@ -1,9 +1,17 @@
 import Link from "next/link";
 import { getPlaceDetails, placePhotoUrl } from "@/lib/places";
+import { getProviderOverride } from "@/lib/overrides";
 import RatingStars from "@/components/RatingStars";
 import ReviewCard from "@/components/ReviewCard";
 import ProviderMap from "@/components/ProviderMap";
-import { Phone, Globe, MapPin, Clock, ExternalLink } from "lucide-react";
+import {
+  Phone,
+  Globe,
+  MapPin,
+  Clock,
+  ExternalLink,
+  BadgeCheck,
+} from "lucide-react";
 
 interface PageProps {
   params: Promise<{ placeId: string }>;
@@ -31,6 +39,14 @@ export default async function ProviderPage({ params }: PageProps) {
       </div>
     );
   }
+
+  // Owner-supplied data, when the listing has been claimed and approved.
+  const override = await getProviderOverride(placeId);
+  const isVerified = !!override;
+  const hasOwnerContent =
+    !!override?.description ||
+    !!override?.servicesOffered ||
+    !!override?.pricingNotes;
 
   const reviews = details.reviews ?? [];
   const photos = details.photoRefs ?? [];
@@ -72,6 +88,11 @@ export default async function ProviderPage({ params }: PageProps) {
               count={details.reviewCount}
               size="lg"
             />
+            {isVerified && (
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full">
+                <BadgeCheck className="w-3.5 h-3.5" /> Verified by owner
+              </span>
+            )}
             {details.openNow !== undefined && (
               <span
                 className={`inline-flex items-center gap-1.5 text-sm ${
@@ -92,6 +113,42 @@ export default async function ProviderPage({ params }: PageProps) {
             <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
             {details.address}
           </p>
+
+          {/* Owner-supplied content */}
+          {hasOwnerContent && (
+            <section className="mt-8 space-y-6">
+              {override?.description && (
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900 mb-2">
+                    About
+                  </h2>
+                  <p className="text-slate-700 whitespace-pre-line leading-relaxed">
+                    {override.description}
+                  </p>
+                </div>
+              )}
+              {override?.servicesOffered && (
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900 mb-2">
+                    Services offered
+                  </h2>
+                  <p className="text-slate-700 whitespace-pre-line leading-relaxed">
+                    {override.servicesOffered}
+                  </p>
+                </div>
+              )}
+              {override?.pricingNotes && (
+                <div>
+                  <h2 className="text-lg font-semibold text-slate-900 mb-2">
+                    Pricing
+                  </h2>
+                  <p className="text-slate-700 whitespace-pre-line leading-relaxed">
+                    {override.pricingNotes}
+                  </p>
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Reviews section */}
           <section className="mt-10">
@@ -190,21 +247,23 @@ export default async function ProviderPage({ params }: PageProps) {
 
           <ProviderMap location={details.location} name={details.name} />
 
-          <Link
-            href={`/provider/${placeId}/claim`}
-            className="block rounded-2xl border border-slate-200 bg-slate-50 p-5 hover:border-teal-400 hover:bg-white transition group"
-          >
-            <p className="text-sm font-semibold text-slate-900 mb-1 group-hover:text-teal-700">
-              Are you the owner?
-            </p>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Claim this listing to add your services, pricing and photos.
-              Verified profiles stand out in search results.
-            </p>
-            <p className="text-sm font-medium text-teal-700 mt-2 group-hover:underline">
-              Claim this listing →
-            </p>
-          </Link>
+          {!isVerified && (
+            <Link
+              href={`/provider/${placeId}/claim`}
+              className="block rounded-2xl border border-slate-200 bg-slate-50 p-5 hover:border-teal-400 hover:bg-white transition group"
+            >
+              <p className="text-sm font-semibold text-slate-900 mb-1 group-hover:text-teal-700">
+                Are you the owner?
+              </p>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Claim this listing to add your services, pricing and photos.
+                Verified profiles stand out in search results.
+              </p>
+              <p className="text-sm font-medium text-teal-700 mt-2 group-hover:underline">
+                Claim this listing →
+              </p>
+            </Link>
+          )}
         </aside>
       </div>
     </div>
