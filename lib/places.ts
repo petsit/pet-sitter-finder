@@ -5,6 +5,64 @@ import { Provider, ProviderDetails, Review, LatLng, SearchParams } from "./types
 
 const PLACES_BASE = "https://places.googleapis.com/v1";
 
+/**
+ * Place types that almost never represent the kind of legitimate pet,
+ * equine or rural service we want to surface in the directory. The big
+ * false-positive case is pubs and restaurants whose names happen to
+ * contain a search keyword (e.g. "The Farrier's Arms" matching a
+ * search for "farrier"). We strip these out before returning results.
+ *
+ * A per-service `allowTypes` override (defined in lib/services.ts) can
+ * whitelist specific types — e.g. "pet-taxi" allows `taxi_stand`.
+ */
+const FORBIDDEN_TYPES: ReadonlySet<string> = new Set([
+  // Food & drink — the biggest false-positive source
+  "bar", "pub", "restaurant", "cafe", "coffee_shop",
+  "meal_takeaway", "meal_delivery", "fast_food_restaurant",
+  "night_club", "liquor_store", "wine_bar",
+  // Accommodation
+  "lodging", "hotel", "bed_and_breakfast", "resort_hotel",
+  "campground", "rv_park", "hostel", "motel",
+  // Leisure / tourism
+  "casino", "amusement_park", "movie_theater",
+  "tourist_attraction", "museum", "art_gallery",
+  // Finance / professional services (none of ours)
+  "bank", "atm",
+  "real_estate_agency", "insurance_agency", "lawyer",
+  "accounting", "funeral_home",
+  // Civic / religious
+  "place_of_worship", "city_hall", "courthouse",
+  "library", "post_office",
+  // Automotive (pet-taxi can re-allow taxi_stand via allowTypes)
+  "gas_station", "car_dealer", "car_rental",
+  "car_repair", "car_wash", "auto_parts_store",
+  // Generic retail
+  "clothing_store", "jewelry_store", "shoe_store", "book_store",
+  "department_store", "electronics_store", "furniture_store",
+  "hardware_store", "home_goods_store", "supermarket",
+  "convenience_store", "bicycle_store", "florist",
+  // Human beauty/health (most are unrelated to pet/equine)
+  "beauty_salon", "hair_care", "nail_salon", "spa",
+  "gym", "fitness_center",
+]);
+
+function isLegitimateProvider(
+  p: Provider,
+  allowOverrides?: ReadonlySet<string>
+): boolean {
+  const allTypes = [p.primaryType, ...(p.types ?? [])].filter(
+    (t): t is string => Boolean(t)
+  );
+  if (allTypes.length === 0) {
+    // No types means we can't judge — keep it. Better to show a real
+    // but uncategorised farrier than to silently drop them.
+    return true;
+  }
+  return !allTypes.some(
+    (t) => FORBIDDEN_TYPES.has(t) && !allowOverrides?.has(t)
+  );
+}
+
 function getKey(): string {
   const key = process.env.GOOGLE_MAPS_API_KEY;
   if (!key) {
@@ -82,7 +140,7 @@ export async function searchPlaces(params: SearchParams): Promise<Provider[]> {
     "places.googleMapsUri",
   ].join(",");
 
-  const body = {
+  const body: Record<string, unknown> = {
     textQuery: params.service,
     // We use locationBias here (not locationRestriction) because the Text
     // Search API rejects a circular locationRestriction — only rectangles
@@ -97,6 +155,14 @@ export async function searchPlaces(params: SearchParams): Promise<Provider[]> {
     maxResultCount: 20,
     regionCode: "GB",
   };
+
+  // If the service has a Google Places primary type that matches well
+  // (e.g. "veterinary_care" for equine-vet), include it. This dramatically
+  // improves precision because Google will preferentially return places
+  // of that type rather than anything mentioning the keyword.
+  if (params.includedType) {
+    body.includedType = params.includedType;
+  }
 
   const res = await fetch(`${PLACES_BASE}/places:searchText`, {
     method: "POST",
@@ -134,6 +200,13 @@ export async function searchPlaces(params: SearchParams): Promise<Provider[]> {
   const radiusMiles = params.radiusMeters / 1609.344;
   providers = providers.filter(
     (p) => haversineMiles(origin, p.location) <= radiusMiles
+  );
+
+  // Drop results whose Google place type is clearly off-topic. This is
+  // what kills "The Farrier's Arms" pubs from a search for "farrier".
+  const allowOverrides = new Set<string>(params.allowTypes ?? []);
+  providers = providers.filter((p) =>
+    isLegitimateProvider(p, allowOverrides)
   );
 
   // Optional rating filter

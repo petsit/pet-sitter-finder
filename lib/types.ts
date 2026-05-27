@@ -39,6 +39,9 @@ export interface ProviderDetails extends Provider {
 
 export interface SearchParams {
   service: string; // free-text service query, e.g. "dog walker"
+  serviceSlug?: string; // service slug, used to look up filter overrides
+  includedType?: string; // optional Google Places primary type to bias toward
+  allowTypes?: string[]; // types to keep even if they're in the universal blocklist
   lat: number;
   lng: number;
   radiusMeters: number;

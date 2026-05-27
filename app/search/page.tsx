@@ -60,6 +60,9 @@ export default async function SearchPage({ searchParams }: PageProps) {
   try {
     providers = await searchPlaces({
       service: service.query,
+      serviceSlug: service.slug,
+      includedType: service.includedType,
+      allowTypes: service.allowTypes,
       lat: origin.lat,
       lng: origin.lng,
       radiusMeters,
