@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LogOut, Search } from "lucide-react";
 import { getSessionEmail } from "@/lib/auth";
+import HerdMark from "./Logo";
 
 export default async function Header() {
   const sessionEmail = await getSessionEmail();
@@ -11,12 +12,13 @@ export default async function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-semibold tracking-tight text-slate-900"
+          className="flex items-center gap-2.5 group"
+          aria-label="HERD home"
         >
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-teal-600 text-white font-bold text-base">
-            H
+          <HerdMark className="w-9 h-9 shadow-sm rounded-[14px] group-hover:scale-105 transition-transform" />
+          <span className="text-xl font-bold tracking-[0.18em] text-slate-900">
+            HERD
           </span>
-          <span className="tracking-wide">HERD</span>
         </Link>
 
         <nav className="flex items-center gap-4 sm:gap-6 text-sm font-medium text-slate-600">

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import HerdMark from "@/components/Logo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,7 +50,10 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <footer className="border-t border-slate-200 mt-12">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
-            <p className="font-medium text-slate-700 tracking-wide">HERD</p>
+            <div className="flex items-center gap-2">
+              <HerdMark className="w-6 h-6 rounded-[10px]" />
+              <p className="font-bold tracking-[0.18em] text-slate-800">HERD</p>
+            </div>
             <p>Helpers, Equine &amp; Rural Directory · Listings powered by Google</p>
           </div>
         </footer>
