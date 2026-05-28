@@ -138,11 +138,30 @@ export default function AdminClaimsTable({ rows, kind }: Props) {
                       </button>
                     </div>
                   ) : (
-                    <span className="text-xs text-slate-400">
-                      {r.reviewedAt
-                        ? new Date(r.reviewedAt).toLocaleDateString("en-GB")
-                        : ""}
-                    </span>
+                    <div className="inline-flex items-center gap-3">
+                      <span className="text-xs text-slate-400">
+                        {r.reviewedAt
+                          ? new Date(r.reviewedAt).toLocaleDateString("en-GB")
+                          : ""}
+                      </span>
+                      {r.status === "approved" && (
+                        <button
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                `Revoke verification for ${r.businessName}? Their custom content will be deleted and the listing reverts to Google-only data.`
+                              )
+                            ) {
+                              decide(r.id, "rejected");
+                            }
+                          }}
+                          disabled={busyId === r.id || pending}
+                          className="inline-flex items-center gap-1 bg-white border border-rose-200 hover:border-rose-400 hover:text-rose-700 disabled:opacity-50 text-rose-600 text-xs font-medium px-3 py-1.5 rounded-lg"
+                        >
+                          <X className="w-3.5 h-3.5" /> Revoke
+                        </button>
+                      )}
+                    </div>
                   )}
                 </td>
               </tr>

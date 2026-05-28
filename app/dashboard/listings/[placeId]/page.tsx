@@ -6,6 +6,7 @@ import { claims, providerOverrides } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { getPlaceDetails, placePhotoUrl } from "@/lib/places";
 import EditListingForm from "@/components/EditListingForm";
+import ReleaseListingButton from "@/components/ReleaseListingButton";
 import RatingStars from "@/components/RatingStars";
 import ReviewCard from "@/components/ReviewCard";
 import { Phone, Globe, MapPin, Clock, ExternalLink } from "lucide-react";
@@ -107,6 +108,12 @@ export default async function EditListingPage({ params }: Props) {
               customPhotos: existing?.customPhotos ?? [],
             }}
             googlePhotos={googlePhotos}
+          />
+
+          {/* Danger zone — release this listing */}
+          <ReleaseListingButton
+            placeId={placeId}
+            businessName={claim[0].businessName}
           />
 
           {/* Reviews — read-only */}

@@ -49,19 +49,31 @@ export async function POST(
     );
   }
 
+  // Look up the existing claim so we can detect "approved -> rejected"
+  // (an admin revocation) and clean up the override row in that case.
+  const [existing] = await db
+    .select()
+    .from(claims)
+    .where(eq(claims.id, id))
+    .limit(1);
+
+  if (!existing) {
+    return NextResponse.json({ error: "Claim not found" }, { status: 404 });
+  }
+
+  const isRevocation =
+    existing.status === "approved" && body.status === "rejected";
+
   // Mark the claim
   const [updated] = await db
     .update(claims)
     .set({
       status: body.status,
       reviewedAt: new Date(),
+      reviewerNote: isRevocation ? "Revoked by admin" : null,
     })
     .where(eq(claims.id, id))
     .returning();
-
-  if (!updated) {
-    return NextResponse.json({ error: "Claim not found" }, { status: 404 });
-  }
 
   // On approval: create an empty override row so the provider has something
   // to edit on first sign-in. Use ON CONFLICT DO NOTHING semantics (skip
@@ -78,6 +90,18 @@ export async function POST(
         .onConflictDoNothing();
     } catch (err) {
       console.error("[admin/decision] override insert failed:", err);
+    }
+  }
+
+  // On admin revocation: delete the override row so the public listing
+  // reverts to Google-only data and the Verified badge disappears.
+  if (isRevocation) {
+    try {
+      await db
+        .delete(providerOverrides)
+        .where(eq(providerOverrides.placeId, updated.placeId));
+    } catch (err) {
+      console.error("[admin/decision] override delete failed:", err);
     }
   }
 
@@ -100,6 +124,26 @@ export async function POST(
             <a href="${loginUrl}" style="display: inline-block; background: #0d9488; color: white; text-decoration: none; padding: 12px 24px; border-radius: 12px; font-weight: 500;">Sign in to HERD</a>
           </p>
           <p style="color: #475569; font-size: 14px;">Or visit your listing as customers see it:<br><a href="${listingUrl}">${listingUrl}</a></p>
+        </div>
+      `,
+    });
+  } else if (isRevocation) {
+    await sendNotificationEmail({
+      to: updated.claimantEmail,
+      subject: `Your HERD listing for ${updated.businessName} has been unverified`,
+      html: `
+        <div style="font-family: -apple-system, sans-serif; max-width: 520px; margin: 0 auto;">
+          <h2 style="color: #0f172a;">Listing unverified</h2>
+          <p>Hi ${escape(updated.claimantName)},</p>
+          <p>We've removed the verified status from your listing for
+            <strong>${escape(updated.businessName)}</strong>. The custom
+            description, services, pricing and photos you'd added have
+            been removed and the listing now shows only its public
+            Google data again.</p>
+          <p>If you think this is a mistake, reply to this email and
+            we'll take another look. You can also submit a fresh claim
+            via the public listing:</p>
+          <p><a href="${listingUrl}">${listingUrl}</a></p>
         </div>
       `,
     });
