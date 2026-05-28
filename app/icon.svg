@@ -1,11 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0d9488"/>
-  <g transform="translate(0 0) scale(0.125)" fill="#ffffff">
-    <!-- left leg -->
-    <rect x="148" y="116" width="64" height="280" rx="10"/>
-    <!-- right leg -->
-    <rect x="300" y="116" width="64" height="280" rx="10"/>
-    <!-- crossbar -->
-    <rect x="148" y="224" width="216" height="64" rx="10"/>
+  <defs>
+    <linearGradient id="herd-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="herd-highlight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="40%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="herd-sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fcd34d" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#fcd34d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background: rounded square with vertical teal gradient -->
+  <rect width="64" height="64" rx="14" fill="url(#herd-bg)"/>
+
+  <!-- Subtle top highlight for an embossed-coin feel -->
+  <rect width="64" height="64" rx="14" fill="url(#herd-highlight)"/>
+
+  <g transform="translate(0 0) scale(0.125)">
+    <!-- Soft amber sun accent in the top-right corner -->
+    <circle cx="408" cy="104" r="80" fill="url(#herd-sun)"/>
+
+    <!-- Refined H letterform -->
+    <g fill="#ffffff">
+      <!-- left leg -->
+      <rect x="156" y="112" width="56" height="288" rx="6"/>
+      <!-- right leg -->
+      <rect x="300" y="112" width="56" height="288" rx="6"/>
+      <!-- crossbar (centred) -->
+      <rect x="156" y="226" width="200" height="60" rx="6"/>
+    </g>
   </g>
 </svg>
