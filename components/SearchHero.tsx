@@ -78,8 +78,40 @@ export default function SearchHero() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/60 via-white to-white">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+    <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/70 via-white to-white">
+      {/* Decorative background — soft mesh blobs + rolling hills */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-0 pointer-events-none"
+      >
+        {/* Mesh blobs: one teal top-left, one amber top-right */}
+        <div className="absolute -top-20 -left-24 w-[28rem] h-[28rem] rounded-full bg-teal-200/40 blur-3xl" />
+        <div className="absolute top-10 -right-32 w-[24rem] h-[24rem] rounded-full bg-amber-100/60 blur-3xl" />
+        <div className="absolute top-1/2 left-1/3 w-72 h-72 rounded-full bg-teal-100/30 blur-3xl" />
+
+        {/* Rolling hills silhouette anchored to the bottom of the hero */}
+        <svg
+          className="absolute bottom-0 left-0 w-full h-32 sm:h-40"
+          viewBox="0 0 1440 200"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          {/* Back hill (lighter) */}
+          <path
+            d="M0,120 C180,80 360,150 540,110 C720,70 900,140 1080,100 C1260,60 1380,110 1440,90 L1440,200 L0,200 Z"
+            fill="#0d9488"
+            fillOpacity="0.08"
+          />
+          {/* Front hill (deeper) */}
+          <path
+            d="M0,160 C200,120 380,180 580,140 C780,110 980,170 1180,140 C1300,125 1380,150 1440,150 L1440,200 L0,200 Z"
+            fill="#0d9488"
+            fillOpacity="0.14"
+          />
+        </svg>
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-teal-700 mb-3">
           Verified UK pet, equine &amp; rural pros
         </p>

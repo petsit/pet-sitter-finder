@@ -5,7 +5,17 @@ import { SERVICE_GROUPS, getServicesByGroup } from "@/lib/services";
 
 export default function ServiceGrid() {
   return (
-    <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 space-y-14">
+    <section className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 space-y-14">
+      {/* Subtle dot-grid backdrop for visual continuity with the hero */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-50 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, rgb(15 23 42 / 0.06) 1px, transparent 0)",
+          backgroundSize: "24px 24px",
+        }}
+      />
       <header className="text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-teal-700 mb-2">
           Browse by service
