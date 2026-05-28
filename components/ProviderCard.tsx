@@ -48,7 +48,7 @@ export default function ProviderCard({ provider, origin, rank }: Props) {
             </h3>
             {provider.isVerified && (
               <span
-                className="inline-flex items-center gap-1 text-xs font-medium text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full shrink-0"
+                className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full shrink-0"
                 title="The owner has claimed and verified this listing"
               >
                 <BadgeCheck className="w-3 h-3" /> Verified

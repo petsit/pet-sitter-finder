@@ -105,7 +105,7 @@ export default async function ProviderPage({ params }: PageProps) {
               size="lg"
             />
             {isVerified && (
-              <span className="inline-flex items-center gap-1 text-sm font-medium text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
                 <BadgeCheck className="w-3.5 h-3.5" /> Verified by owner
               </span>
             )}
