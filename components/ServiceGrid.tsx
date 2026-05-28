@@ -3,6 +3,31 @@
 import Link from "next/link";
 import { SERVICE_GROUPS, getServicesByGroup } from "@/lib/services";
 
+// Per-group colour treatment for the icon tile.  Same neutral text/label
+// for all so the grid reads as one unit, but the icon tint shifts subtly
+// from teal (pet) -> amber (equine) -> emerald (farm). Helps customers
+// scan the three categories at a glance without making the grid noisy.
+const GROUP_ICON_STYLES: Record<
+  string,
+  { bg: string; bgHover: string; text: string }
+> = {
+  pet: {
+    bg: "bg-teal-50",
+    bgHover: "group-hover:bg-teal-100",
+    text: "text-teal-700",
+  },
+  equine: {
+    bg: "bg-amber-50",
+    bgHover: "group-hover:bg-amber-100",
+    text: "text-amber-700",
+  },
+  farm: {
+    bg: "bg-emerald-50",
+    bgHover: "group-hover:bg-emerald-100",
+    text: "text-emerald-700",
+  },
+};
+
 export default function ServiceGrid() {
   return (
     <section className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 space-y-14">
@@ -28,34 +53,39 @@ export default function ServiceGrid() {
         </p>
       </header>
 
-      {SERVICE_GROUPS.map((group) => (
-        <div key={group.key}>
-          <div className="mb-5 pb-3 border-b border-slate-200 flex items-baseline justify-between">
-            <h3 className="text-xl font-semibold tracking-tight text-slate-900">
-              {group.label}
-            </h3>
-            <p className="text-sm text-slate-500 hidden sm:block">
-              {group.blurb}
-            </p>
+      {SERVICE_GROUPS.map((group) => {
+        const style = GROUP_ICON_STYLES[group.key];
+        return (
+          <div key={group.key}>
+            <div className="mb-5 pb-3 border-b border-slate-200 flex items-baseline justify-between">
+              <h3 className="text-xl font-semibold tracking-tight text-slate-900">
+                {group.label}
+              </h3>
+              <p className="text-sm text-slate-500 hidden sm:block">
+                {group.blurb}
+              </p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {getServicesByGroup(group.key).map((s) => (
+                <Link
+                  key={s.slug}
+                  href={`/search?service=${s.slug}&radius=8`}
+                  className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left hover:border-slate-300 hover:shadow-sm transition"
+                >
+                  <span
+                    className={`shrink-0 w-10 h-10 inline-flex items-center justify-center rounded-lg ${style.bg} ${style.bgHover} ${style.text} transition`}
+                  >
+                    <s.Icon className="w-5 h-5" strokeWidth={1.75} />
+                  </span>
+                  <span className="font-medium text-slate-800 group-hover:text-slate-900 truncate text-sm">
+                    {s.label}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {getServicesByGroup(group.key).map((s) => (
-              <Link
-                key={s.slug}
-                href={`/search?service=${s.slug}&radius=8`}
-                className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left hover:border-teal-400 hover:shadow-sm transition"
-              >
-                <span className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-lg bg-slate-50 text-base group-hover:bg-teal-50 transition">
-                  <span aria-hidden>{s.emoji}</span>
-                </span>
-                <span className="font-medium text-slate-800 group-hover:text-teal-700 truncate">
-                  {s.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </section>
   );
 }
