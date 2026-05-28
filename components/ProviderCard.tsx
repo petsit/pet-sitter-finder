@@ -3,7 +3,7 @@ import { Provider, LatLng } from "@/lib/types";
 import { haversineMiles } from "@/lib/places";
 import RatingStars from "./RatingStars";
 import { placePhotoUrl } from "@/lib/places";
-import { Phone, Globe, MapPin, PawPrint } from "lucide-react";
+import { Phone, Globe, MapPin, PawPrint, BadgeCheck } from "lucide-react";
 
 interface Props {
   provider: Provider;
@@ -40,11 +40,21 @@ export default function ProviderCard({ provider, origin, rank }: Props) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-lg font-semibold text-slate-900 truncate group-hover:text-teal-700">
-            <Link href={`/provider/${provider.id}`} className="hover:underline">
-              {provider.name}
-            </Link>
-          </h3>
+          <div className="min-w-0 flex items-center gap-2 flex-wrap">
+            <h3 className="text-lg font-semibold text-slate-900 truncate group-hover:text-teal-700">
+              <Link href={`/provider/${provider.id}`} className="hover:underline">
+                {provider.name}
+              </Link>
+            </h3>
+            {provider.isVerified && (
+              <span
+                className="inline-flex items-center gap-1 text-xs font-medium text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full shrink-0"
+                title="The owner has claimed and verified this listing"
+              >
+                <BadgeCheck className="w-3 h-3" /> Verified
+              </span>
+            )}
+          </div>
           <span className="shrink-0 text-sm text-slate-500">
             {distMiles.toFixed(1)} mi
           </span>

@@ -20,6 +20,7 @@ export interface Provider {
   priceLevel?: string;
   photoRef?: string; // first photo reference for thumbnail
   openNow?: boolean;
+  isVerified?: boolean; // owner has claimed and verified the listing
 }
 
 export interface Review {
@@ -35,6 +36,13 @@ export interface ProviderDetails extends Provider {
   weekdayHours?: string[]; // formatted lines like "Monday: 9:00 AM – 5:00 PM"
   reviews?: Review[];
   photoRefs?: string[]; // multiple photos
+}
+
+// Allow the page layer to flag verified providers without polluting
+// the raw Google-derived Provider shape. Set in app/search/page.tsx
+// after looking up which place IDs have approved overrides.
+export interface VerifiableProvider {
+  isVerified?: boolean;
 }
 
 export interface SearchParams {

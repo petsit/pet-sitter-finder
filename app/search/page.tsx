@@ -4,6 +4,7 @@ import SearchResultsClient from "@/components/SearchResultsClient";
 import LocationPrompt from "@/components/LocationPrompt";
 import { searchPlaces } from "@/lib/places";
 import { geocode } from "@/lib/geocode";
+import { getVerifiedPlaceIds } from "@/lib/overrides";
 import { getServiceBySlug } from "@/lib/services";
 import { LatLng } from "@/lib/types";
 
@@ -67,6 +68,14 @@ export default async function SearchPage({ searchParams }: PageProps) {
       lng: origin.lng,
       radiusMeters,
     });
+
+    // Annotate each result with whether the owner has claimed and verified
+    // the listing. One DB query for the whole result set.
+    const verifiedIds = await getVerifiedPlaceIds(providers.map((p) => p.id));
+    providers = providers.map((p) => ({
+      ...p,
+      isVerified: verifiedIds.has(p.id),
+    }));
   } catch (err: any) {
     return (
       <ErrorState
