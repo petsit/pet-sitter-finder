@@ -51,16 +51,16 @@ export default function ForProvidersPage() {
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              href="/login"
-              className="inline-flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-3 rounded-xl"
+              href="/find"
+              className="inline-flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-medium px-6 py-3 rounded-xl"
             >
-              Sign in to your dashboard
+              <Search className="w-4 h-4" /> Find and claim your business
             </Link>
             <Link
-              href="/find"
-              className="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 hover:border-teal-400 text-slate-900 font-medium px-6 py-3 rounded-xl"
+              href="/pricing"
+              className="inline-flex items-center justify-center bg-white border border-slate-200 hover:border-teal-400 text-slate-900 font-medium px-6 py-3 rounded-xl"
             >
-              <Search className="w-4 h-4" /> Find your business
+              See pricing
             </Link>
           </div>
           <p className="mt-3 text-sm text-slate-500">

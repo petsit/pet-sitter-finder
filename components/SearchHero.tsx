@@ -81,16 +81,16 @@ export default function SearchHero() {
     <section className="relative overflow-hidden bg-gradient-to-b from-teal-50/60 via-white to-white">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-teal-700 mb-3">
-          UK pet, equine &amp; rural directory
+          Verified UK pet, equine &amp; rural pros
         </p>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900">
-          Find trusted local pros,
-          <br className="hidden sm:block" /> rated by real reviews
+          Find a local pro
+          <br className="hidden sm:block" /> you can actually trust
         </h1>
         <p className="mt-5 text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-          Search local pet sitters, dog walkers, farriers, livery yards,
-          farm hands and more — sorted by genuine Google reviews. Compare
-          ratings and contact your favourite directly.
+          HERD curates every UK pet sitter, dog walker, farrier, livery yard
+          and farm hand. Filter by rating, services and distance — and see
+          owner-verified details Google can&apos;t show you.
         </p>
 
         <form
