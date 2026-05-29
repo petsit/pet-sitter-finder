@@ -51,7 +51,10 @@ export default async function SearchPage({ searchParams }: PageProps) {
     // location prompt so the user can complete the search from this page.
     return (
       <Suspense fallback={<div className="p-8 text-center">Loading…</div>}>
-        <LocationPrompt service={service} />
+        <LocationPrompt
+          serviceLabel={service.label}
+          serviceEmoji={service.emoji}
+        />
       </Suspense>
     );
   }

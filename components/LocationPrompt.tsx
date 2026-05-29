@@ -3,13 +3,19 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { MapPin, Loader2, Search } from "lucide-react";
-import { ServiceCategory } from "@/lib/services";
 
+// Only the primitive fields cross the server → client boundary. The
+// full ServiceCategory contains an Icon component reference that React
+// can't serialise as a prop, so the parent page extracts these instead.
 interface Props {
-  service: ServiceCategory;
+  serviceLabel: string;
+  serviceEmoji: string;
 }
 
-export default function LocationPrompt({ service }: Props) {
+export default function LocationPrompt({
+  serviceLabel,
+  serviceEmoji,
+}: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [location, setLocation] = useState("");
@@ -69,13 +75,13 @@ export default function LocationPrompt({ service }: Props) {
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
       <div className="text-center mb-10">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-teal-50 text-2xl mb-5">
-          <span aria-hidden>{service.emoji}</span>
+          <span aria-hidden>{serviceEmoji}</span>
         </div>
         <p className="text-sm font-semibold uppercase tracking-wider text-teal-700 mb-2">
-          {service.label}
+          {serviceLabel}
         </p>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 mb-3">
-          Find {service.label.toLowerCase()} near you
+          Find {serviceLabel.toLowerCase()} near you
         </h1>
         <p className="text-lg text-slate-600 leading-relaxed">
           Enter your postcode or use your current location to see top-rated
