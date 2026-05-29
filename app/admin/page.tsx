@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { isAdmin } from "@/lib/auth";
 import { db } from "@/db";
 import { claims } from "@/db/schema";

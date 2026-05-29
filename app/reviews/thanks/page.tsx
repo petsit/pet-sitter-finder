@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckCircle2, AlertTriangle, Clock } from "lucide-react";
+import { CheckCircle2, AlertTriangle, Clock, type LucideIcon } from "lucide-react";
 
 interface Props {
   searchParams: Promise<{ status?: string }>;
@@ -11,7 +11,7 @@ export default async function ReviewThanksPage({ searchParams }: Props) {
 
   const states: Record<
     string,
-    { icon: any; tint: string; title: string; body: string }
+    { icon: LucideIcon; tint: string; title: string; body: string }
   > = {
     ok: {
       icon: CheckCircle2,
