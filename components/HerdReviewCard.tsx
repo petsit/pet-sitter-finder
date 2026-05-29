@@ -1,12 +1,14 @@
 import { BadgeCheck } from "lucide-react";
 import RatingStars from "./RatingStars";
+import ReportReviewButton from "./ReportReviewButton";
 import type { HerdReview } from "@/db/schema";
 
 interface Props {
   review: HerdReview;
+  businessName: string;
 }
 
-export default function HerdReviewCard({ review }: Props) {
+export default function HerdReviewCard({ review, businessName }: Props) {
   const dateStr = review.reviewedAt
     ? new Date(review.reviewedAt).toLocaleDateString("en-GB", {
         day: "numeric",
@@ -49,6 +51,13 @@ export default function HerdReviewCard({ review }: Props) {
           Service used: <strong>{review.serviceUsed}</strong>
         </p>
       )}
+
+      <footer className="mt-3 pt-3 border-t border-slate-100 flex justify-end">
+        <ReportReviewButton
+          reviewId={review.id}
+          businessName={businessName}
+        />
+      </footer>
     </article>
   );
 }

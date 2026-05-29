@@ -224,7 +224,11 @@ export default async function ProviderPage({ params }: PageProps) {
             {herdReviewList.length > 0 ? (
               <div className="space-y-3 mb-8">
                 {herdReviewList.map((r) => (
-                  <HerdReviewCard key={r.id} review={r} />
+                  <HerdReviewCard
+                    key={r.id}
+                    review={r}
+                    businessName={details.name}
+                  />
                 ))}
               </div>
             ) : (
