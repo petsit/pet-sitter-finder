@@ -106,6 +106,11 @@ export default async function EditListingPage({ params }: Props) {
               servicesOffered: existing?.servicesOffered ?? "",
               pricingNotes: existing?.pricingNotes ?? "",
               customPhotos: existing?.customPhotos ?? [],
+              priceFrom: existing?.priceFrom ? Number(existing.priceFrom) : null,
+              priceUnit: existing?.priceUnit ?? null,
+              responseTimeHours: existing?.responseTimeHours
+                ? Number(existing.responseTimeHours)
+                : null,
             }}
             googlePhotos={googlePhotos}
           />

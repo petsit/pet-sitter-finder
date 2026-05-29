@@ -54,6 +54,13 @@ export const providerOverrides = pgTable(
     description: text("description"),
     servicesOffered: text("services_offered"),
     pricingNotes: text("pricing_notes"),
+    // Structured pricing — shown as "From £X / [unit]" on cards.
+    // Stored in whole pounds (no pence) to keep the editor simple.
+    priceFrom: text("price_from"), // text rather than int to keep null-handling easy with Drizzle
+    priceUnit: text("price_unit"), // e.g. 'walk', 'visit', 'night', 'session', 'hour', 'month'
+    // Self-declared typical response time in hours. Surfaced as
+    // 'Usually responds within X hours' alongside the pricing.
+    responseTimeHours: text("response_time_hours"),
     customPhotos: jsonb("custom_photos").$type<string[]>(),
     customHours: jsonb("custom_hours").$type<string[]>(),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -106,6 +113,7 @@ export const herdReviews = pgTable(
     reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
     reviewerNote: text("reviewer_note"),
     reportedCount: text("reported_count").default("0"),
+    reportedAt: timestamp("reported_at", { withTimezone: true }),
   },
   (t) => ({
     placeIdx: index("herd_reviews_place_idx").on(t.placeId),

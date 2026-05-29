@@ -46,3 +46,46 @@ export async function getVerifiedPlaceIds(
     return new Set();
   }
 }
+
+export interface EnrichmentData {
+  isVerified: boolean;
+  priceFrom: number | null;
+  priceUnit: string | null;
+  responseTimeHours: number | null;
+}
+
+// Bulk fetch of structured pricing / response-time so search results
+// can show 'From £X' on the card without N+1 queries.
+export async function getProviderEnrichmentMap(
+  placeIds: string[]
+): Promise<Map<string, EnrichmentData>> {
+  const map = new Map<string, EnrichmentData>();
+  if (placeIds.length === 0) return map;
+  try {
+    const rows = await db
+      .select({
+        placeId: providerOverrides.placeId,
+        priceFrom: providerOverrides.priceFrom,
+        priceUnit: providerOverrides.priceUnit,
+        responseTimeHours: providerOverrides.responseTimeHours,
+      })
+      .from(providerOverrides)
+      .where(inArray(providerOverrides.placeId, placeIds));
+    for (const row of rows) {
+      map.set(row.placeId, {
+        isVerified: true,
+        priceFrom: row.priceFrom ? Number(row.priceFrom) : null,
+        priceUnit: row.priceUnit ?? null,
+        responseTimeHours: row.responseTimeHours
+          ? Number(row.responseTimeHours)
+          : null,
+      });
+    }
+  } catch (err) {
+    console.warn(
+      "[overrides] enrichment lookup failed (continuing without):",
+      (err as Error)?.message ?? err
+    );
+  }
+  return map;
+}

@@ -3,7 +3,8 @@ import { Provider, LatLng } from "@/lib/types";
 import { haversineMiles } from "@/lib/places";
 import RatingStars from "./RatingStars";
 import { placePhotoUrl } from "@/lib/places";
-import { Phone, Globe, MapPin, PawPrint, BadgeCheck } from "lucide-react";
+import { Phone, Globe, MapPin, PawPrint, BadgeCheck, Clock } from "lucide-react";
+import { formatPrice, formatResponseTime } from "@/lib/formatting";
 
 interface Props {
   provider: Provider;
@@ -67,6 +68,25 @@ export default function ProviderCard({ provider, origin, rank }: Props) {
             size="lg"
           />
         </div>
+
+        {/* Pricing + response time — only shown for claimed providers */}
+        {(() => {
+          const priceLabel = formatPrice(provider.priceFrom, provider.priceUnit);
+          const responseLabel = formatResponseTime(provider.responseTimeHours);
+          if (!priceLabel && !responseLabel) return null;
+          return (
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+              {priceLabel && (
+                <span className="font-semibold text-slate-900">{priceLabel}</span>
+              )}
+              {responseLabel && (
+                <span className="inline-flex items-center gap-1 text-slate-600">
+                  <Clock className="w-3.5 h-3.5" /> {responseLabel}
+                </span>
+              )}
+            </div>
+          );
+        })()}
 
         <p className="mt-1 flex items-start gap-1 text-sm text-slate-600 line-clamp-1">
           <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5" />

@@ -21,6 +21,10 @@ export interface Provider {
   photoRef?: string; // first photo reference for thumbnail
   openNow?: boolean;
   isVerified?: boolean; // owner has claimed and verified the listing
+  // Owner-supplied enrichment shown on cards + details
+  priceFrom?: number | null;
+  priceUnit?: string | null;
+  responseTimeHours?: number | null;
 }
 
 export interface Review {

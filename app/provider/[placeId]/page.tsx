@@ -14,7 +14,9 @@ import {
   Clock,
   ExternalLink,
   BadgeCheck,
+  PoundSterling,
 } from "lucide-react";
+import { formatPrice, formatResponseTime } from "@/lib/formatting";
 
 interface PageProps {
   params: Promise<{ placeId: string }>;
@@ -135,6 +137,38 @@ export default async function ProviderPage({ params }: PageProps) {
             <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
             {details.address}
           </p>
+
+          {/* Headline pricing + response time card — only when owner has set them */}
+          {(() => {
+            const priceLabel = formatPrice(
+              override?.priceFrom != null ? Number(override.priceFrom) : null,
+              override?.priceUnit ?? null
+            );
+            const responseLabel = formatResponseTime(
+              override?.responseTimeHours
+                ? Number(override.responseTimeHours)
+                : null
+            );
+            if (!priceLabel && !responseLabel) return null;
+            return (
+              <div className="mt-5 rounded-2xl border border-slate-200 bg-gradient-to-br from-teal-50/60 to-white p-4 flex flex-wrap items-center gap-x-6 gap-y-2">
+                {priceLabel && (
+                  <div className="inline-flex items-center gap-2">
+                    <PoundSterling className="w-4 h-4 text-teal-700" />
+                    <span className="font-semibold text-slate-900">
+                      {priceLabel}
+                    </span>
+                  </div>
+                )}
+                {responseLabel && (
+                  <div className="inline-flex items-center gap-2 text-slate-700">
+                    <Clock className="w-4 h-4 text-teal-700" />
+                    <span className="text-sm">{responseLabel}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Owner-supplied content */}
           {hasOwnerContent && (

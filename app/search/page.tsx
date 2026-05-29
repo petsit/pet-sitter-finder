@@ -4,7 +4,7 @@ import SearchResultsClient from "@/components/SearchResultsClient";
 import LocationPrompt from "@/components/LocationPrompt";
 import { searchPlaces } from "@/lib/places";
 import { geocode } from "@/lib/geocode";
-import { getVerifiedPlaceIds } from "@/lib/overrides";
+import { getProviderEnrichmentMap } from "@/lib/overrides";
 import { getServiceBySlug } from "@/lib/services";
 import { LatLng } from "@/lib/types";
 
@@ -72,13 +72,23 @@ export default async function SearchPage({ searchParams }: PageProps) {
       radiusMeters,
     });
 
-    // Annotate each result with whether the owner has claimed and verified
-    // the listing. One DB query for the whole result set.
-    const verifiedIds = await getVerifiedPlaceIds(providers.map((p) => p.id));
-    providers = providers.map((p) => ({
-      ...p,
-      isVerified: verifiedIds.has(p.id),
-    }));
+    // Annotate each result with the owner-supplied enrichment (verified
+    // flag, structured pricing, response time). One DB query for the whole
+    // result set rather than N+1.
+    const enrichmentMap = await getProviderEnrichmentMap(
+      providers.map((p) => p.id)
+    );
+    providers = providers.map((p) => {
+      const e = enrichmentMap.get(p.id);
+      if (!e) return { ...p, isVerified: false };
+      return {
+        ...p,
+        isVerified: e.isVerified,
+        priceFrom: e.priceFrom,
+        priceUnit: e.priceUnit,
+        responseTimeHours: e.responseTimeHours,
+      };
+    });
   } catch (err: any) {
     return (
       <ErrorState
