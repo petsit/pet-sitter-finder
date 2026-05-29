@@ -206,18 +206,22 @@ export default async function ProviderPage({ params }: PageProps) {
 
           {/* Google reviews section */}
           <section className="mt-12">
-            <h2 className="text-2xl font-semibold text-slate-900 mb-1">
-              {details.reviewCount ?? 0} Google reviews
-            </h2>
-            {details.rating !== undefined && (
-              <div className="mb-6">
-                <RatingStars
-                  rating={details.rating}
-                  count={details.reviewCount}
-                  size="lg"
-                />
-              </div>
-            )}
+            <header className="mb-5">
+              <h2 className="text-2xl font-semibold text-slate-900 mb-1">
+                {reviews.length > 0 && details.reviewCount
+                  ? `Showing ${reviews.length} of ${details.reviewCount} Google reviews`
+                  : `${details.reviewCount ?? 0} Google reviews`}
+              </h2>
+              {details.rating !== undefined && (
+                <div className="mt-2">
+                  <RatingStars
+                    rating={details.rating}
+                    count={details.reviewCount}
+                    size="lg"
+                  />
+                </div>
+              )}
+            </header>
 
             {reviews.length === 0 ? (
               <p className="text-slate-500 italic">No reviews yet.</p>
@@ -229,19 +233,33 @@ export default async function ProviderPage({ params }: PageProps) {
               </div>
             )}
 
-            {details.googleMapsUri && (
-              <p className="mt-6 text-sm text-slate-500">
-                More reviews and full information available on{" "}
-                <a
-                  href={details.googleMapsUri}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-teal-700 hover:underline inline-flex items-center gap-1"
-                >
-                  Google Maps <ExternalLink className="w-3 h-3" />
-                </a>
-              </p>
-            )}
+            {details.googleMapsUri &&
+              details.reviewCount &&
+              details.reviewCount > reviews.length && (
+                <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/60 p-5 text-center">
+                  <p className="text-sm text-slate-600 mb-3">
+                    Google only shows 5 reviews via their API.
+                    {details.reviewCount - reviews.length > 0 && (
+                      <>
+                        {" "}
+                        <strong>
+                          {details.reviewCount - reviews.length} more
+                        </strong>{" "}
+                        reviews are available on Google Maps.
+                      </>
+                    )}
+                  </p>
+                  <a
+                    href={details.googleMapsUri}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-white border border-slate-200 hover:border-teal-400 text-slate-900 font-medium px-5 py-2.5 rounded-xl"
+                  >
+                    See all {details.reviewCount} reviews on Google Maps{" "}
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              )}
           </section>
         </div>
 
