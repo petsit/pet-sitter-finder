@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { getPlaceDetails, placePhotoUrl } from "@/lib/places";
 import { getProviderOverride } from "@/lib/overrides";
+import { getApprovedReviews } from "@/lib/reviews";
 import RatingStars from "@/components/RatingStars";
 import ReviewCard from "@/components/ReviewCard";
+import HerdReviewCard from "@/components/HerdReviewCard";
+import ReviewForm from "@/components/ReviewForm";
 import ProviderMap from "@/components/ProviderMap";
 import {
   Phone,
@@ -43,6 +46,9 @@ export default async function ProviderPage({ params }: PageProps) {
   // Owner-supplied data, when the listing has been claimed and approved.
   const override = await getProviderOverride(placeId);
   const isVerified = !!override;
+
+  // HERD-direct reviews (email-verified + admin-approved)
+  const herdReviewList = await getApprovedReviews(placeId);
   const hasOwnerContent =
     !!override?.description ||
     !!override?.servicesOffered ||
@@ -166,8 +172,40 @@ export default async function ProviderPage({ params }: PageProps) {
             </section>
           )}
 
-          {/* Reviews section */}
+          {/* HERD-direct reviews section */}
           <section className="mt-10">
+            <header className="mb-5 flex items-end justify-between flex-wrap gap-3">
+              <div>
+                <h2 className="text-2xl font-semibold text-slate-900 mb-1">
+                  {herdReviewList.length === 0
+                    ? "Reviews on HERD"
+                    : `${herdReviewList.length} HERD review${herdReviewList.length === 1 ? "" : "s"}`}
+                </h2>
+                <p className="text-sm text-slate-500">
+                  Email-verified reviews posted directly on HERD, alongside Google&apos;s.
+                </p>
+              </div>
+            </header>
+
+            {herdReviewList.length > 0 ? (
+              <div className="space-y-3 mb-8">
+                {herdReviewList.map((r) => (
+                  <HerdReviewCard key={r.id} review={r} />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/50 p-6 text-center mb-8">
+                <p className="text-slate-600">
+                  No HERD reviews yet — be the first to leave one.
+                </p>
+              </div>
+            )}
+
+            <ReviewForm placeId={placeId} businessName={details.name} />
+          </section>
+
+          {/* Google reviews section */}
+          <section className="mt-12">
             <h2 className="text-2xl font-semibold text-slate-900 mb-1">
               {details.reviewCount ?? 0} Google reviews
             </h2>

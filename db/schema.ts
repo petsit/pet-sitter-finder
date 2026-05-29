@@ -72,3 +72,47 @@ export type Claim = typeof claims.$inferSelect;
 export type NewClaim = typeof claims.$inferInsert;
 export type ProviderOverride = typeof providerOverrides.$inferSelect;
 export type NewProviderOverride = typeof providerOverrides.$inferInsert;
+
+// Reviews left directly on HERD by customers, displayed alongside the
+// Google reviews on the provider detail page.  Every review must be
+// (a) email-verified by the reviewer and (b) approved by an admin
+// before it appears publicly — keeps HERD's defence under UK
+// Defamation Act 2013 s.5 intact (notice-and-takedown process) and
+// the review feed trustworthy.
+export const reviewStatusEnum = pgEnum("review_status", [
+  "pending", // submitted, awaiting email verification
+  "verified", // email verified, awaiting admin moderation
+  "approved", // visible on the listing
+  "rejected", // hidden — not shown to anyone
+]);
+
+export const herdReviews = pgTable(
+  "herd_reviews",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    placeId: text("place_id").notNull(),
+    businessName: text("business_name").notNull(),
+    authorName: text("author_name").notNull(),
+    authorEmail: text("author_email").notNull(),
+    rating: text("rating").notNull(), // store as text to avoid drizzle integer issues; 1-5
+    title: text("title"),
+    body: text("body").notNull(),
+    serviceUsed: text("service_used"), // optional: which service the reviewer used
+    status: reviewStatusEnum("status").notNull().default("pending"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
+    reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+    reviewerNote: text("reviewer_note"),
+    reportedCount: text("reported_count").default("0"),
+  },
+  (t) => ({
+    placeIdx: index("herd_reviews_place_idx").on(t.placeId),
+    emailIdx: index("herd_reviews_email_idx").on(t.authorEmail),
+    statusIdx: index("herd_reviews_status_idx").on(t.status),
+  })
+);
+
+export type HerdReview = typeof herdReviews.$inferSelect;
+export type NewHerdReview = typeof herdReviews.$inferInsert;
