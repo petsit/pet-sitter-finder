@@ -29,6 +29,8 @@ import {
   TreePine,
   Fence,
   Sprout,
+  Flower2,
+  Shovel,
   PawPrint,
 } from "lucide-react";
 
@@ -109,6 +111,8 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   { slug: "hedge-cutting", label: "Hedge cutting", query: "hedge cutting flailing contractor", emoji: "🌳", Icon: TreePine, group: "farm" },
   { slug: "fencing", label: "Fencing contractors", query: "agricultural fencing contractor", emoji: "🪵", Icon: Fence, group: "farm" },
   { slug: "lambing-help", label: "Lambing help", query: "contract lambing assistant", emoji: "🐏", Icon: Sprout, group: "farm" },
+  { slug: "gardener", label: "Gardeners", query: "professional gardening service maintenance", emoji: "🌷", Icon: Flower2, group: "farm" },
+  { slug: "landscaper", label: "Landscapers", query: "garden landscaper landscape designer", emoji: "🌿", Icon: Shovel, group: "farm" },
 ];
 
 export const DEFAULT_SERVICE = SERVICE_CATEGORIES[0];
