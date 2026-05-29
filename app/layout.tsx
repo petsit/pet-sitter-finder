@@ -49,12 +49,32 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <footer className="border-t border-slate-200 mt-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-sm text-slate-500">
             <div className="flex items-center gap-2">
               <HerdMark className="w-6 h-6 rounded-[10px]" />
               <p className="font-bold tracking-[0.18em] text-slate-800">HERD</p>
             </div>
-            <p>Helpers, Equine &amp; Rural Directory · Listings powered by Google</p>
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+              <a href="/for-providers" className="hover:text-slate-900">
+                For providers
+              </a>
+              <a href="/pricing" className="hover:text-slate-900">
+                Pricing
+              </a>
+              <a href="/community-guidelines" className="hover:text-slate-900">
+                Guidelines
+              </a>
+              <a href="/terms" className="hover:text-slate-900">
+                Terms
+              </a>
+              <a href="/privacy" className="hover:text-slate-900">
+                Privacy
+              </a>
+            </nav>
+          </div>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 text-xs text-slate-400">
+            Helpers, Equine &amp; Rural Directory · Listings powered by Google ·
+            © {new Date().getFullYear()} Turner Stores Ltd
           </div>
         </footer>
       </body>
