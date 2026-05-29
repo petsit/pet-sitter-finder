@@ -206,39 +206,17 @@ export default async function ProviderPage({ params }: PageProps) {
             </section>
           )}
 
-          {/* HERD-direct reviews section */}
+          {/* Write-a-review (kept at the top of the reviews stack) */}
           <section className="mt-10">
-            <header className="mb-5 flex items-end justify-between flex-wrap gap-3">
-              <div>
-                <h2 className="text-2xl font-semibold text-slate-900 mb-1">
-                  {herdReviewList.length === 0
-                    ? "Reviews on HERD"
-                    : `${herdReviewList.length} HERD review${herdReviewList.length === 1 ? "" : "s"}`}
-                </h2>
-                <p className="text-sm text-slate-500">
-                  Email-verified reviews posted directly on HERD, alongside Google&apos;s.
-                </p>
-              </div>
+            <header className="mb-5">
+              <h2 className="text-2xl font-semibold text-slate-900 mb-1">
+                Leave a review on HERD
+              </h2>
+              <p className="text-sm text-slate-500">
+                Reviews are email-verified and admin-moderated before
+                publishing — usually within 2 working days.
+              </p>
             </header>
-
-            {herdReviewList.length > 0 ? (
-              <div className="space-y-3 mb-8">
-                {herdReviewList.map((r) => (
-                  <HerdReviewCard
-                    key={r.id}
-                    review={r}
-                    businessName={details.name}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/50 p-6 text-center mb-8">
-                <p className="text-slate-600">
-                  No HERD reviews yet — be the first to leave one.
-                </p>
-              </div>
-            )}
-
             <ReviewForm placeId={placeId} businessName={details.name} />
           </section>
 
@@ -271,6 +249,7 @@ export default async function ProviderPage({ params }: PageProps) {
               </div>
             )}
 
+            {/* placeholder edit anchor — see below for the closing CTA */}
             {details.googleMapsUri &&
               details.reviewCount &&
               details.reviewCount > reviews.length && (
@@ -298,6 +277,42 @@ export default async function ProviderPage({ params }: PageProps) {
                   </a>
                 </div>
               )}
+          </section>
+
+          {/* HERD-direct reviews list — sits below the Google reviews so
+              customers see the broader Google body first, then the more
+              recent / more specific HERD-verified reviews underneath. */}
+          <section className="mt-12">
+            <header className="mb-5">
+              <h2 className="text-2xl font-semibold text-slate-900 mb-1">
+                {herdReviewList.length === 0
+                  ? "Reviews on HERD"
+                  : `${herdReviewList.length} HERD review${herdReviewList.length === 1 ? "" : "s"}`}
+              </h2>
+              <p className="text-sm text-slate-500">
+                Posted directly on HERD by verified customers — alongside
+                the Google reviews above.
+              </p>
+            </header>
+
+            {herdReviewList.length > 0 ? (
+              <div className="space-y-3">
+                {herdReviewList.map((r) => (
+                  <HerdReviewCard
+                    key={r.id}
+                    review={r}
+                    businessName={details.name}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/50 p-6 text-center">
+                <p className="text-slate-600">
+                  No HERD reviews yet — be the first to leave one using
+                  the form above.
+                </p>
+              </div>
+            )}
           </section>
         </div>
 
