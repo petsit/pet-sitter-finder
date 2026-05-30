@@ -140,16 +140,31 @@ export async function searchPlaces(params: SearchParams): Promise<Provider[]> {
     "places.googleMapsUri",
   ].join(",");
 
+  // Build a bounding rectangle that fully contains the requested radius.
+  // We use locationRestriction.rectangle (a HARD constraint) rather than
+  // locationBias.circle (a soft hint).  Without this, Google ranks results
+  // by relevance across the whole bias area and can push closer matches
+  // out of the top 20 in favour of further-away ones — meaning a wider
+  // radius can paradoxically return FEWER results after the haversine
+  // trim.  The bounding rectangle is slightly larger than the requested
+  // circle (corners are ~1.41× the radius from centre); the haversine
+  // filter further down trims back to the exact circle.
+  const radiusMiles = params.radiusMeters / 1609.344;
+  const latDelta = radiusMiles / 69; // ~69 miles per degree of latitude
+  const lngDelta =
+    radiusMiles / (69 * Math.max(0.1, Math.cos((params.lat * Math.PI) / 180)));
   const body: Record<string, unknown> = {
     textQuery: params.service,
-    // We use locationBias here (not locationRestriction) because the Text
-    // Search API rejects a circular locationRestriction — only rectangles
-    // are accepted for that field. The strict radius enforcement is done
-    // in the haversine filter below, which gives us a proper circle.
-    locationBias: {
-      circle: {
-        center: { latitude: params.lat, longitude: params.lng },
-        radius: params.radiusMeters,
+    locationRestriction: {
+      rectangle: {
+        low: {
+          latitude: params.lat - latDelta,
+          longitude: params.lng - lngDelta,
+        },
+        high: {
+          latitude: params.lat + latDelta,
+          longitude: params.lng + lngDelta,
+        },
       },
     },
     maxResultCount: 20,

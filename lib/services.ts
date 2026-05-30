@@ -107,13 +107,10 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   { slug: "equine-physio", label: "Equine physios", query: "equine physiotherapy", emoji: "💪", Icon: Activity, group: "equine" },
 
   // --- Farm & countryside ---
-  { slug: "farm-hand", label: "Farm hands", query: "farm hand agricultural worker", emoji: "👨‍🌾", Icon: HardHat, group: "farm" },
   { slug: "ag-contractor", label: "Agricultural contractors", query: "agricultural contractor", emoji: "🚜", Icon: Tractor, group: "farm" },
   { slug: "shepherd", label: "Shepherds", query: "contract shepherd sheep services", emoji: "🐑", Icon: Mountain, group: "farm" },
-  { slug: "stockman", label: "Stockmen", query: "stockman cattle livestock services", emoji: "🐄", Icon: Wheat, group: "farm" },
   { slug: "hedge-cutting", label: "Hedge cutting", query: "hedge cutting flailing contractor", emoji: "🌳", Icon: TreePine, group: "farm" },
   { slug: "fencing", label: "Fencing contractors", query: "agricultural fencing contractor", emoji: "🪵", Icon: Fence, group: "farm" },
-  { slug: "lambing-help", label: "Lambing help", query: "contract lambing assistant", emoji: "🐏", Icon: Sprout, group: "farm" },
   { slug: "gardener", label: "Gardeners", query: "professional gardening service maintenance", emoji: "🌷", Icon: Flower2, group: "farm" },
   { slug: "landscaper", label: "Landscapers", query: "garden landscaper landscape designer", emoji: "🌿", Icon: Shovel, group: "farm" },
   { slug: "dry-stone-waller", label: "Dry stone wallers", query: "dry stone waller walling repair", emoji: "🧱", Icon: BrickWall, group: "farm" },
