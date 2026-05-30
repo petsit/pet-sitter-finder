@@ -10,6 +10,7 @@ import { getTownBySlug, UK_TOWNS, type UkTown } from "@/lib/uk-towns";
 import { searchPlaces } from "@/lib/places";
 import { getProviderEnrichmentMap } from "@/lib/overrides";
 import SearchResultsClient from "@/components/SearchResultsClient";
+import type { Provider } from "@/lib/types";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -68,7 +69,7 @@ export default async function ProgrammaticSeoPage({ params }: Props) {
 
   // Pull results with the existing search pipeline — same filters, same
   // relevance blocklist, same verified enrichment.
-  let providers;
+  let providers: Provider[] = [];
   try {
     providers = await searchPlaces({
       service: service.query,
