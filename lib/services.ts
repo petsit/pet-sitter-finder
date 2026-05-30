@@ -32,6 +32,8 @@ import {
   Flower2,
   Shovel,
   BrickWall,
+  Bug,
+  Footprints,
   PawPrint,
 } from "lucide-react";
 
@@ -115,6 +117,8 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   { slug: "gardener", label: "Gardeners", query: "professional gardening service maintenance", emoji: "🌷", Icon: Flower2, group: "farm" },
   { slug: "landscaper", label: "Landscapers", query: "garden landscaper landscape designer", emoji: "🌿", Icon: Shovel, group: "farm" },
   { slug: "dry-stone-waller", label: "Dry stone wallers", query: "dry stone waller walling repair", emoji: "🧱", Icon: BrickWall, group: "farm" },
+  { slug: "pest-control", label: "Pest control", query: "pest control rats wasps moles", emoji: "🐀", Icon: Bug, group: "farm" },
+  { slug: "gamekeeper", label: "Gamekeepers", query: "gamekeeper game shoot estate management", emoji: "🦌", Icon: Footprints, group: "farm" },
 ];
 
 export const DEFAULT_SERVICE = SERVICE_CATEGORIES[0];
