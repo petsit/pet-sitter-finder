@@ -4,10 +4,9 @@ import { Suspense } from "react";
 import { Search } from "lucide-react";
 import {
   SERVICE_CATEGORIES,
-  getServiceBySlug,
   type ServiceCategory,
 } from "@/lib/services";
-import { getTownBySlug, type UkTown } from "@/lib/uk-towns";
+import { getTownBySlug, UK_TOWNS, type UkTown } from "@/lib/uk-towns";
 import { searchPlaces } from "@/lib/places";
 import { getProviderEnrichmentMap } from "@/lib/overrides";
 import SearchResultsClient from "@/components/SearchResultsClient";
@@ -168,18 +167,16 @@ export default async function ProgrammaticSeoPage({ params }: Props) {
             {service.label} in nearby areas
           </h2>
           <ul className="space-y-1.5">
-            {(await getNearbyTownSlugs(town))
-              .slice(0, 6)
-              .map((nearby) => (
-                <li key={nearby.slug}>
-                  <Link
-                    href={`/${service.slug}-in-${nearby.slug}`}
-                    className="text-teal-700 hover:underline"
-                  >
-                    {service.label} in {nearby.name}
-                  </Link>
-                </li>
-              ))}
+            {getNearbyTowns(town, 6).map((nearby) => (
+              <li key={nearby.slug}>
+                <Link
+                  href={`/${service.slug}-in-${nearby.slug}`}
+                  className="text-teal-700 hover:underline"
+                >
+                  {service.label} in {nearby.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </aside>
@@ -187,14 +184,27 @@ export default async function ProgrammaticSeoPage({ params }: Props) {
   );
 }
 
-// Simple distance-based proximity for related-towns links.
-async function getNearbyTownSlugs(origin: UkTown): Promise<UkTown[]> {
-  const { UK_TOWNS } = await import("@/lib/uk-towns");
-  return UK_TOWNS.filter((t) => t.slug !== origin.slug)
-    .map((t) => ({
-      ...t,
-      d: Math.hypot(t.lat - origin.lat, t.lng - origin.lng),
-    }))
-    .sort((a, b) => a.d - b.d)
-    .slice(0, 8);
+// Cheap proximity sort — sorted-by-nearest list of towns, excluding the
+// origin.  We use a typed local interface so the distance field doesn't
+// leak into the UkTown return type (which caused the prod build to fail).
+interface NearbyEntry {
+  slug: string;
+  name: string;
+  county: string;
+  distance: number;
+}
+
+function getNearbyTowns(origin: UkTown, limit: number): NearbyEntry[] {
+  const out: NearbyEntry[] = [];
+  for (const t of UK_TOWNS) {
+    if (t.slug === origin.slug) continue;
+    out.push({
+      slug: t.slug,
+      name: t.name,
+      county: t.county,
+      distance: Math.hypot(t.lat - origin.lat, t.lng - origin.lng),
+    });
+  }
+  out.sort((a, b) => a.distance - b.distance);
+  return out.slice(0, limit);
 }
